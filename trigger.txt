@@ -1,0 +1,127 @@
+create table Customer(
+CustomerId int identity(1,1),
+CustomerName varchar(20),
+CustomerAddress varchar(20),
+PhoneNo varchar(20),
+walletpoints int
+)
+select * from Customer
+-----------------------
+create table ProductType(
+ProductTypeId int identity(101,1),
+TypeName varchar(20)
+)
+-------
+create table ProductTable(
+ProductId int identity(201,1),
+ProductTypeId int,
+ProductName varchar(20),
+Amount int
+)
+-----
+create table PaymentMode(
+PaymentModeId int identity(301,1),
+CustomerId int,
+productId int,
+PaymentMethod varchar(20),
+PaymentDate datetime,
+totalbill int
+)select * from PaymentMode
+--------
+create table CartHistory(
+CartId int identity(501,1),
+CustomerId int,
+ProductId int,
+PurchaseDate datetime
+)
+alter table carthistory drop column ElectronicID 
+--------------
+select * from Customer
+select * from ProductTable
+select * from ProductType
+select * from PaymentMode
+select * from CartHistory
+
+exec customername 0,'sc','mumbai','8686','i'
+--update
+exec customername 5,'shubham','mum','11111','u'
+--delete
+exec customername 4,'s','pune','000','d'
+--select
+exec customername 1,'as','nsk','885','s'
+
+
+
+insert into CartHistory (paymentmodeid,PurchaseDate)
+values (303,GETDATE())
+
+
+select SUM(pt.Amount)as total_sum from CartHistory ch inner join 
+PaymentMode py 
+on ch.Paymentmodeid=py.PaymentModeId join
+ProductTable pt on pt.ProductId=py.productId
+
+
+select avg(pt.Amount)as AVG_amount from CartHistory ch inner join 
+PaymentMode py 
+on ch.Paymentmodeid=py.PaymentModeId join
+ProductTable pt on pt.ProductId=py.productId
+
+SELECT APPROX_COUNT_DISTINCT(CustomerId) AS ApproxDistinctCustomers
+FROM Customer;
+
+SELECT APPROX_COUNT_DISTINCT(PaymentMethod) AS ApproxDistinctPaymentMethods
+FROM PaymentMode;
+
+SELECT VAR(Amount) AS ProductAmountVariance
+FROM ProductTable;
+
+SELECT STRING_AGG(CustomerName, ', ') AS AllCustomerNames
+FROM Customer;
+
+SELECT STDEV(Amount) AS ProductAmountStandardDeviation
+FROM ProductTable;
+
+
+alter TRIGGER addproducttopaymentmode
+ON ProductTable
+AFTER INSERT 
+AS
+BEGIN
+print 'trigger execute'
+    DECLARE @ProductId INT;
+
+    SELECT @ProductId =SCOPE_IDENTITY();
+	print 'trigger execute'
+    INSERT INTO PaymentMode (CustomerId, productId, PaymentMethod, PaymentDate)
+    VALUES (5, @ProductId, 'UPI', GETDATE());  
+END;
+insert into ProductTable values(104,'ipad','40000')
+
+
+select * from ProductTable
+select * from PaymentMode
+update PaymentMode set totalbill=70000 where PaymentModeId=307
+select* from Customer
+
+
+create TRIGGER update_wallet_on_purchase2
+ON ProductTable
+AFTER INSERT
+AS
+BEGIN
+    DECLARE @CustomerId INT, @Amount INT, @paymentmodeid int,@wallet int;
+	select @wallet = walletpoints,@CustomerId=CustomerId from Customer
+	select @paymentmodeid=paymentmodeid from PaymentMode
+   select @Amount = Amount from ProductTable
+  --  SELECT @paymentmodeid = PaymentModeId
+   -- FROM inserted;
+
+    
+    UPDATE PaymentMode
+    SET totalbill = @Amount-@wallet from PaymentMode inner join ProductTable on PaymentMode.productId=ProductTable.ProductId
+	inner join Customer on Customer.CustomerId=PaymentMode.CustomerId
+    WHERE PaymentMode.PaymentModeId =@paymentmodeid;
+END;
+
+insert ProductTable values(104,'macbook',70000)
