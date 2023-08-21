@@ -1,0 +1,23 @@
+create trigger wallet2
+on carthistory
+after insert
+as
+begin
+declare @paymentmodeid int
+declare @amount int
+declare @walletpoints int
+
+select @paymentmodeid=i.paymentmodeid,@amount=pt.Amount,@walletpoints=c.walletpoints from inserted i
+join PaymentMode pm on i.paymentmodeID=pm.PaymentModeId 
+join ProductTable pt on pt.ProductId=pm.productId 
+join customer c on c.CustomerId=pm.CustomerId
+
+declare @newbill int 
+set @newbill=@amount-@walletpoints
+
+update PaymentMode set totalbill=@newbill
+where PaymentModeId=@paymentmodeid
+
+
+
+end

@@ -1,0 +1,83 @@
+create table Customer(
+CustomerId int identity(1,1),
+CustomerName varchar(20),
+CustomerAddress varchar(20),
+PhoneNo varchar(20),
+walletpoints int
+)
+select * from Customer
+-----------------------
+create table ProductType(
+ProductTypeId int identity(101,1),
+TypeName varchar(20)
+)
+-------
+create table ProductTable(
+ProductId int identity(201,1),
+ProductTypeId int,
+ProductName varchar(20),
+Amount int
+)
+-----
+create table PaymentMode(
+PaymentModeId int identity(301,1),
+CustomerId int,
+productId int,
+PaymentMethod varchar(20),
+PaymentDate datetime,
+totalbill int
+)select * from PaymentMode
+--------
+create table CartHistory(
+CartId int identity(501,1),
+CustomerId int,
+ProductId int,
+PurchaseDate datetime
+)
+alter table carthistory drop column ElectronicID 
+--------------
+select * from Customer
+select * from ProductTable
+select * from ProductType
+select * from PaymentMode
+select * from CartHistory
+
+exec customername 0,'sc','mumbai','8686','i'
+--update
+exec customername 5,'shubham','mum','11111','u'
+--delete
+exec customername 4,'s','pune','000','d'
+--select
+exec customername 1,'as','nsk','885','s'
+
+
+
+insert into CartHistory (paymentmodeid,PurchaseDate)
+values (303,GETDATE())
+
+
+select SUM(pt.Amount)as total_sum from CartHistory ch inner join 
+PaymentMode py 
+on ch.Paymentmodeid=py.PaymentModeId join
+ProductTable pt on pt.ProductId=py.productId
+
+
+select avg(pt.Amount)as AVG_amount from CartHistory ch inner join 
+PaymentMode py 
+on ch.Paymentmodeid=py.PaymentModeId join
+ProductTable pt on pt.ProductId=py.productId
+
+SELECT APPROX_COUNT_DISTINCT(CustomerId) AS ApproxDistinctCustomers
+FROM Customer;
+
+SELECT APPROX_COUNT_DISTINCT(PaymentMethod) AS ApproxDistinctPaymentMethods
+FROM PaymentMode;
+
+SELECT VAR(Amount) AS ProductAmountVariance
+FROM ProductTable;
+
+SELECT STRING_AGG(CustomerName, ', ') AS AllCustomerNames
+FROM Customer;
+
+SELECT STDEV(Amount) AS ProductAmountStandardDeviation
+FROM ProductTable;
