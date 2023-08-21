@@ -1,0 +1,16 @@
+alter trigger addProduct
+on producttable
+after insert
+as
+begin
+declare @productid int
+print'trigger executed'
+
+select @productid=i.ProductId from inserted i
+insert into PaymentMode(CustomerId,productId,PaymentMethod,PaymentDate,totalbill) 
+values(2,@productid,'UPI',GETDATE(),1999)
+end
+
+insert into ProductTable values(105,'Sneakers',1000)
+select * from ProductTable
+select * from PaymentMode
