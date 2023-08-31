@@ -1,0 +1,88 @@
+create table customer(customerid int identity(1,1),customername varchar(20),customeraddress varchar(20),
+customerphone varchar(20),WalletPoints int,customerPass varchar(10),createOn datetime) 
+
+select *from suppliers
+
+
+
+create table suppliers(
+supplierId int identity(11,1),
+CompanyName varchar(20),
+supplierEmail varchar(20),
+supplierPhone varchar(20),
+SupplierAddress varchar(20),
+craeteon datetime
+)
+
+create table categories(
+categoryID int identity(21,1),
+Cname varchar(20),
+createon datetime
+)
+
+create table products(
+ProductID int identity(31,1),
+productName varchar(20),
+Price decimal,
+stockQuantity int,
+categoryID int,
+supplierId int,
+createOn datetime
+)
+
+create table orderdetails(
+OrdersID int identity(101,1),
+customerid int ,
+paymentid int,
+totalprice decimal,
+orderstatus int,
+orderdate datetime,
+)
+create table cartdetails(
+CartID int identity(201,1),
+customerid int,
+productid int,
+quantity int,
+UnitPrice decimal
+)
+
+create table reviews(
+Reviewid int identity(501,1),
+customerid int,
+productid int,
+rating decimal,
+reviewDate datetime
+
+)
+
+create table paymenttype(
+paymentid int identity(1001,1),
+paymenttype varchar(10)
+)
+---------------------
+select * from customer
+
+insert into customer values('john','nyc','8877',20,'123',GETDATE())
+
+
+select * from suppliers
+insert into suppliers values ('croma','cr@g.com','7755','boston',GETDATE())
+
+select * from categories
+insert into categories values('Clothes',GETDATE()),('Electronics',GETDATE())
+
+select * from products
+insert into products values('T-shirt',200,10,21,11,GETDATE())
+
+
+select * from cartdetails
+insert into cartdetails values(1,31,1,5000)
+
+select * from orderdetails
+insert into orderdetails values (1,1001,5200,1,GETDATE())
+
+select * from reviews
+
+
+select * from paymenttype
+insert into paymenttype values('upi')
